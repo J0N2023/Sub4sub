@@ -1,0 +1,82 @@
+name: sub4sub_2023
+description: Sub4sub Application 2023
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.19.0-444.0.dev <3.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.5
+  go_router: ^5.2.4
+  provider: ^6.0.5
+  cached_network_image: ^3.2.3
+  carousel_slider: ^4.2.1
+  animated_button: ^0.2.0
+  rxdart: ^0.27.7
+  shared_preferences: ^2.0.15
+  flutter_native_splash: ^2.2.16
+  flutter_launcher_icons: ^0.11.0
+  rounded_loading_button: ^2.1.0
+  dio: ^4.0.6
+  rflutter_alert: ^2.0.4
+  intl: ^0.18.0
+  firebase_core: ^2.4.0
+  lottie: ^2.1.0
+  google_sign_in: ^5.4.2
+  flutter_zoom_drawer: ^3.0.3
+  get: ^4.6.5
+  bordered_text: ^2.0.0
+  percent_indicator: ^4.2.2
+  device_info_plus: ^8.0.0
+  webview_flutter: ^3.0.4
+  sqflite: ^2.2.2
+  path_provider: ^2.0.11
+  path: ^1.8.2
+  crypto: ^3.0.2
+  http: ^0.13.5
+  flutter_widget_from_html: ^0.9.0+1
+  flutter_chat_bubble: ^2.0.0
+  url_launcher: ^6.1.7
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.1
+flutter:
+
+  uses-material-design: true
+  assets:
+    - assets/
+    - assets/img/
+    - assets/img/banner/
+    - assets/img/icon/
+    - assets/img/lottie/
+    - assets/fonts/
+
+  fonts:
+    - family: Overpass
+      fonts:
+        - asset: assets/fonts/Overpass/Overpass-Black.ttf
+        - asset: assets/fonts/Overpass/Overpass-BlackItalic.ttf
+        - asset: assets/fonts/Overpass/Overpass-Bold.ttf
+        - asset: assets/fonts/Overpass/Overpass-BoldItalic.ttf
+        - asset: assets/fonts/Overpass/Overpass-ExtraBold.ttf
+        - asset: assets/fonts/Overpass/Overpass-ExtraBoldItalic.ttf
+        - asset: assets/fonts/Overpass/Overpass-ExtraLight.ttf
+        - asset: assets/fonts/Overpass/Overpass-ExtraLightItalic.ttf
+        - asset: assets/fonts/Overpass/Overpass-Italic.ttf
+        - asset: assets/fonts/Overpass/Overpass-Light.ttf
+        - asset: assets/fonts/Overpass/Overpass-LightItalic.ttf
+        - asset: assets/fonts/Overpass/Overpass-Medium.ttf
+        - asset: assets/fonts/Overpass/Overpass-MediumItalic.ttf
+        - asset: assets/fonts/Overpass/Overpass-Regular.ttf
+        - asset: assets/fonts/Overpass/Overpass-SemiBold.ttf
+        - asset: assets/fonts/Overpass/Overpass-SemiBoldItalic.ttf
+        - asset: assets/fonts/Overpass/Overpass-Thin.ttf
+        - asset: assets/fonts/Overpass/Overpass-ThinItalic.ttf
+          weight: 700

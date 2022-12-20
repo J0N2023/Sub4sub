@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "895398794767",
+    "project_id": "sub4sub-2023-5bf83",
+    "storage_bucket": "sub4sub-2023-5bf83.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:895398794767:android:e288d0c9fe14ce9db3357a",
+        "android_client_info": {
+          "package_name": "com.alfatihlab.sub4sub_2023"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "895398794767-fk8vlbj8lvt3tvdcaolc5pfr161ru6he.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXLGsLae2iRN6lxTIZ7V-JdImVZPxxiHI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "895398794767-fk8vlbj8lvt3tvdcaolc5pfr161ru6he.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
