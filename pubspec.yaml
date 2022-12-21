@@ -46,6 +46,11 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+flutter_icons:
+  image_path: "assets/img/icon/shortcut.png"
+  android: false
+  ios: true
+
   flutter_lints: ^2.0.1
 flutter:
 

@@ -64,10 +64,11 @@ class _DataCampaignState extends State<DataCampaign> {
               ],
             ),
           ),
-          SizedBox(height: 10,),
+          const SizedBox(height: 10,),
           Consumer<SubscribeProvider>(
               builder: (context, data, _) {
-                return Column(
+                return (data.list.isNotEmpty)
+                    ? Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -78,7 +79,7 @@ class _DataCampaignState extends State<DataCampaign> {
                         color: textHitam
                       ),),
                     ),
-                    SizedBox(height: 5,),
+                    const SizedBox(height: 5,),
                     ListView.builder(
                       itemCount: data.list.length,
                       physics: const ScrollPhysics(),
@@ -89,7 +90,8 @@ class _DataCampaignState extends State<DataCampaign> {
                       },
                     ),
                   ],
-                );
+                )
+                    : const SizedBox();
               }
           ),
           const SizedBox(height: 20,),
@@ -142,7 +144,7 @@ class _DataCampaignState extends State<DataCampaign> {
                     imageUrl: model.avatar),
               ),
             ),
-            SizedBox(width: 10,),
+            const SizedBox(width: 10,),
             Expanded(child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,

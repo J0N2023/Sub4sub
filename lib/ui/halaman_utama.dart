@@ -279,7 +279,7 @@ class _HalamanUtamaPageState extends State<HalamanUtamaPage> with WidgetsBinding
                       builder: (context, stat, _) {
                         return Row(
                           children: [
-                            _itemStatistik('Coins', data.model.coin.toString()),
+                            _itemStatistik('Coins', kFormat(data.model.coin)),
                             const VerticalDivider(
                               thickness: 2,
                             ),
@@ -505,7 +505,7 @@ class _HalamanUtamaPageState extends State<HalamanUtamaPage> with WidgetsBinding
                 textAlign: TextAlign.center,
                 style: TextStyle(color: textHitam, fontSize: 10, height: 0.9),
               ),
-              (title == 'Coins')
+              (title == 'Coinsx')
                   ? Padding(
                     padding: const EdgeInsets.only(top: 5.0),
                     child: AnimatedButton(

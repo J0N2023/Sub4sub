@@ -183,3 +183,9 @@ String myChannelName(String text){
   int i3 = s2.indexOf('";');
   return s2.substring(14, i3);
 }
+String kFormat(int number){
+  return NumberFormat.compactCurrency(
+    decimalDigits: 2,
+    symbol: '',
+  ).format(number);
+}

@@ -31,6 +31,7 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
+      print(account!.displayName);
       setState(() {
         _currentUser = account;
         context.goNamed('main');

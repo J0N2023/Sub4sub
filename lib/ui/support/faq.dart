@@ -41,7 +41,7 @@ class _FaqPageState extends State<FaqPage> {
             itemCount: data.list.length,
             physics: const ScrollPhysics(),
             shrinkWrap: true,
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
             itemBuilder: (BuildContext context, int index) {
               return _itemFaq(data.list[index]);
             },

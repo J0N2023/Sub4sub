@@ -26,26 +26,24 @@ class _HalamanPageState extends State<HalamanPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(widget.nama),
-      body: Consumer<HalamanProvider>(
-        builder: (context, data, _) {
-          return ListView(
-            padding: const EdgeInsets.all(15),
-            children: [
-              Text(data.model.nama, style: TextStyle(
-                color: textHitam,
-                fontWeight: FontWeight.bold,
-                fontSize: 18
-              ),),
-              const SizedBox(height: 20,),
-              HtmlWidget(data.model.isi,
-                onErrorBuilder: (context, element, error) => Text('$element error: $error'),
-                onLoadingBuilder: (context, element, loadingProgress) => const CircularProgressIndicator(),
-                renderMode: RenderMode.column,
-                textStyle: const TextStyle(fontSize: 14),
-              ),
-            ],
-          );
-        }
+      body: SafeArea(
+        child: Consumer<HalamanProvider>(
+          builder: (context, data, _) {
+            return ListView(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: HtmlWidget(data.model.isi,
+                    onErrorBuilder: (context, element, error) => Text('$element error: $error'),
+                    onLoadingBuilder: (context, element, loadingProgress) => const CircularProgressIndicator(),
+                    renderMode: RenderMode.column,
+                    textStyle: const TextStyle(fontSize: 16),
+                  ),
+                ),
+              ],
+            );
+          }
+        ),
       ),
     );
   }
