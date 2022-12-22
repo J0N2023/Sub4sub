@@ -8,10 +8,10 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sub4sub_2023/config/url.dart';
 import 'package:sub4sub_2023/config/void.dart';
 import 'package:sub4sub_2023/config/widget.dart';
-import 'package:sub4sub_2023/main.dart';
 import 'package:sub4sub_2023/providers/user_provider.dart';
 import 'package:http/http.dart' as http;
 import '../../config/warna.dart';
+import '../../model/user_model.dart';
 
 class CreateCampaign extends StatefulWidget {
   const CreateCampaign({Key? key}) : super(key: key);
@@ -76,9 +76,9 @@ class _CreateCampaignState extends State<CreateCampaign> {
   }
 
   void _createCampaign() async {
-    String email = googleSignIn.currentUser!.email;
+    UserModel userModel = await getUser();
+    String email = userModel.email;
     Dio dio = Dio();
-
     Map formData = {
       'email': email,
       'id_channel': _idChannel,

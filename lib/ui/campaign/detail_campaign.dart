@@ -13,8 +13,7 @@ import 'package:sub4sub_2023/config/widget.dart';
 import 'package:sub4sub_2023/model/campaign_model.dart';
 import 'package:sub4sub_2023/ui/youtube/youtube_page.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-
-import '../../main.dart';
+import '../../model/user_model.dart';
 import '../../providers/user_provider.dart';
 
 class DetailCampaign extends StatefulWidget {
@@ -38,8 +37,8 @@ class _DetailCampaignState extends State<DetailCampaign> {
   bool _goAgain = false;
 
   _claimCoin(String id, String chName, String avatar)  async {
-    String email = googleSignIn.currentUser!.email;
-
+    UserModel userModel = await getUser();
+    String email = userModel.email;
     Dio dio = Dio();
     FormData formData = FormData.fromMap({
       'id_campaign': widget.model.id,
@@ -63,8 +62,9 @@ class _DetailCampaignState extends State<DetailCampaign> {
     });
   }
 
-  _skip(){
-    context.goNamed('loading_campaign', params: {'email': googleSignIn.currentUser!.email});
+  _skip() async {
+    UserModel userModel = await getUser();
+    context.goNamed('loading_campaign', params: {'email': userModel.email});
   }
 
   _prosesCek(String hasil) async {
@@ -413,9 +413,10 @@ class _DetailCampaignState extends State<DetailCampaign> {
                 ),
               ),
             ),
-            onPressed: () {
+            onPressed: () async {
+              UserModel userModel = await getUser();
               context.goNamed('loading_campaign', params: {
-                'email':  googleSignIn.currentUser!.email
+                'email':  userModel.email
               });
             },
           ),

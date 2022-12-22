@@ -1,15 +1,15 @@
 
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sub4sub_2023/config/helper.dart';
 import 'package:sub4sub_2023/config/url.dart';
-import 'package:sub4sub_2023/main.dart';
+import 'package:sub4sub_2023/config/void.dart';
 import 'package:sub4sub_2023/model/campaign_model.dart';
 import 'package:sub4sub_2023/model/chat_model.dart';
 import 'package:sub4sub_2023/model/halaman_model.dart';
 import 'package:sub4sub_2023/model/setting_model.dart';
+import 'package:sub4sub_2023/model/user_model.dart';
 
 import '../model/faq_model.dart';
 import '../model/subscribe_model.dart';
@@ -18,8 +18,9 @@ var dio = Dio();
 var dbHelper = Helper();
 
 loadMyCampaign() async {
+  UserModel userModel = await getUser();
   String last = await dbHelper.getUpdateCampaign();
-  Response response = await dio.get('$apiUrl/my_campaign/$last/${googleSignIn.currentUser!.email}');
+  Response response = await dio.get('$apiUrl/my_campaign/$last/${userModel.email}');
   List newData = response.data['new_data'];
   String allID = response.data['all_id'];
   String newID = response.data['new_id'];
@@ -60,8 +61,9 @@ loadHalaman() async {
 }
 
 loadChat() async {
+  UserModel userModel = await getUser();
   String last = await dbHelper.getUpdateChat();
-  Response response = await dio.get('$apiUrl/load/$last/chat/${googleSignIn.currentUser!.email}');
+  Response response = await dio.get('$apiUrl/load/$last/chat/${userModel.email}');
   List newData = response.data['new_data'];
   String allID = response.data['all_id'];
   String newID = response.data['new_id'];
@@ -81,8 +83,9 @@ loadSetting() async {
 }
 
 loadSubscribe() async {
+  UserModel userModel = await getUser();
   String last = await dbHelper.getUpdateSubscribe();
-  Response response = await dio.get('$apiUrl/load/$last/subscribe/${googleSignIn.currentUser!.email}');
+  Response response = await dio.get('$apiUrl/load/$last/subscribe/${userModel.email}');
   List newData = response.data['new_data'];
   String allID = response.data['all_id'];
   String newID = response.data['new_id'];

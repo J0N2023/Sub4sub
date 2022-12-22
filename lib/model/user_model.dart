@@ -12,6 +12,7 @@ class UserModel {
     required this.coin,
     required this.idDevice,
     required this.os,
+    required this.avatar,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -22,16 +23,18 @@ class UserModel {
   int coin;
   String idDevice;
   String os;
+  String avatar;
   String createdAt;
   String updatedAt;
 
-  factory UserModel.fromMap(Map<String, dynamic> json) => UserModel(
+  factory UserModel.fromMap(Map<dynamic, dynamic> json) => UserModel(
     id: json["id"] ?? 0,
     nama: json["nama"] ?? "",
     email: json["email"] ?? "",
     coin: json["coin"] ?? 0,
     idDevice: json["id_device"] ?? "",
     os: json["os"] ?? "",
+    avatar: json["avatar"] ?? "",
     createdAt: json["created_at"] ?? "",
     updatedAt: json["updated_at"] ?? "",
   );
@@ -43,6 +46,7 @@ class UserModel {
     "coin": coin,
     "id_device": idDevice,
     "os": os,
+    "avatar": avatar,
     "created_at": createdAt,
     "updated_at": updatedAt,
   };

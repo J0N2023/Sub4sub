@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sub4sub_2023/cek_login.dart';
 import 'package:sub4sub_2023/model/campaign_model.dart';
 import 'package:sub4sub_2023/model/faq_model.dart';
 import 'package:sub4sub_2023/providers/chat_provider.dart';
@@ -12,6 +13,7 @@ import 'package:sub4sub_2023/providers/my_campaign_provider.dart';
 import 'package:sub4sub_2023/providers/statistic_provider.dart';
 import 'package:sub4sub_2023/providers/subscribe_provider.dart';
 import 'package:sub4sub_2023/providers/user_provider.dart';
+import 'package:sub4sub_2023/ui/auth/signup.dart';
 import 'package:sub4sub_2023/ui/campaign/create_campaign.dart';
 import 'package:sub4sub_2023/ui/campaign/data_campaign.dart';
 import 'package:sub4sub_2023/ui/campaign/detail_campaign.dart';
@@ -19,7 +21,7 @@ import 'package:sub4sub_2023/ui/campaign/index_campaign.dart';
 import 'package:sub4sub_2023/ui/campaign/loading_campaign.dart';
 import 'package:sub4sub_2023/ui/campaign/no_campaign.dart';
 import 'package:sub4sub_2023/ui/halaman_utama.dart';
-import 'package:sub4sub_2023/ui/login.dart';
+import 'package:sub4sub_2023/ui/auth/login.dart';
 import 'package:sub4sub_2023/ui/support/detail_faq.dart';
 import 'package:sub4sub_2023/ui/support/faq.dart';
 import 'package:sub4sub_2023/ui/support/feedback.dart';
@@ -27,12 +29,6 @@ import 'package:sub4sub_2023/ui/support/halaman.dart';
 import 'package:sub4sub_2023/ui/youtube/youtube_page.dart';
 import 'config/firebase_options.dart';
 import 'package:provider/provider.dart';
-
-final GoogleSignIn googleSignIn = GoogleSignIn(
-  scopes: <String>[
-    'email',
-  ],
-);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,6 +43,20 @@ class MyApp extends StatelessWidget {
 
   final GoRouter _router = GoRouter(
       routes: <GoRoute>[
+        GoRoute(
+          path: '/',
+          name: 'cek_login',
+          builder: (context, state) {
+            return const CekLoginPage();
+          },
+        ),
+        GoRoute(
+          path: '/signup',
+          name: 'signup',
+          builder: (context, state) {
+            return const SignupPage();
+          },
+        ),
         GoRoute(
           path: '/login',
           name: 'login',
@@ -153,7 +163,7 @@ class MyApp extends StatelessWidget {
           ]
         ),
       ],
-      initialLocation: '/login',
+      initialLocation: '/',
       debugLogDiagnostics: true,
       routerNeglect: false
   );

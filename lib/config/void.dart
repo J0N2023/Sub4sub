@@ -3,12 +3,17 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sub4sub_2023/config/const.dart';
+import 'package:sub4sub_2023/config/warna.dart';
 import 'package:sub4sub_2023/model/setting_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
+import '../model/user_model.dart';
 
 String namaChannel(String text){
   if(!text.contains("videoSecondaryInfoRenderer")) return '';
@@ -183,9 +188,40 @@ String myChannelName(String text){
   int i3 = s2.indexOf('";');
   return s2.substring(14, i3);
 }
+
 String kFormat(int number){
   return NumberFormat.compactCurrency(
     decimalDigits: 2,
     symbol: '',
   ).format(number);
+}
+
+alertError(BuildContext context, String pesan) {
+  return Alert(
+    context: context,
+    type: AlertType.error,
+    title: "Ups !",
+    desc: pesan,
+    buttons: [
+      DialogButton(
+          onPressed: () => Navigator.pop(context),
+          color: merah,
+          child: const Text(
+            "Ok",
+            style: TextStyle(color: Colors.white, fontSize: 16),
+          )),
+    ],
+  ).show();
+}
+
+Future<bool> withGoogle() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('with_google')!;
+}
+
+Future<UserModel> getUser() async {
+  final prefs = await SharedPreferences.getInstance();
+  Map json = jsonDecode(prefs.getString('user')!);
+  UserModel model = UserModel.fromMap(json);
+  return model;
 }

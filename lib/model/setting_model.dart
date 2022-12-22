@@ -11,6 +11,7 @@ class SettingModel {
     required this.androidVersi,
     required this.playstore,
     required this.appstore,
+    required this.isDev,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -20,6 +21,7 @@ class SettingModel {
   int androidVersi;
   String playstore;
   String appstore;
+  int isDev;
   String createdAt;
   String updatedAt;
 
@@ -29,6 +31,7 @@ class SettingModel {
     androidVersi: json["android_versi"] ?? 0,
     playstore: json["playstore"] ?? "",
     appstore: json["appstore"] ?? "",
+    isDev: json["is_dev"] ?? 0,
     createdAt: json["created_at"] ?? "",
     updatedAt: json["updated_at"] ?? "",
   );
@@ -39,6 +42,7 @@ class SettingModel {
     "android_versi": androidVersi,
     "playstore": playstore,
     "appstore": appstore,
+    "is_dev": isDev,
     "created_at": createdAt,
     "updated_at": updatedAt,
   };

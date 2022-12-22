@@ -1,10 +1,9 @@
 
 import 'dart:io';
-
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:sub4sub_2023/config/url.dart';
-import 'package:sub4sub_2023/main.dart';
+import 'package:sub4sub_2023/config/void.dart';
 import 'package:sub4sub_2023/model/user_model.dart';
 import 'package:dio/dio.dart';
 
@@ -16,6 +15,7 @@ class UserProvider with ChangeNotifier {
     coin: 0,
     idDevice: "",
     os: "",
+    avatar: "",
     createdAt: "",
     updatedAt: "",
   );
@@ -23,7 +23,6 @@ class UserProvider with ChangeNotifier {
   UserModel get model => _model;
 
   Future<void> getData() async {
-
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     String idDevice = '';
     String os = '';
@@ -37,10 +36,10 @@ class UserProvider with ChangeNotifier {
       os = 'IOS';
     }
 
+    UserModel userModel = await getUser();
     Dio dio = Dio();
     FormData formData = FormData.fromMap({
-      'email': googleSignIn.currentUser!.email,
-      'nama': googleSignIn.currentUser!.displayName,
+      'email': userModel.email,
       'id_device': idDevice,
       'os': os,
     });

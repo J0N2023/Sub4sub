@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sub4sub_2023/config/load_data.dart';
 import 'package:sub4sub_2023/config/void.dart';
 import 'package:sub4sub_2023/config/widget.dart';
@@ -14,11 +15,11 @@ import 'package:sub4sub_2023/config/warna.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:sub4sub_2023/model/setting_model.dart';
+import 'package:sub4sub_2023/model/user_model.dart';
 import 'package:sub4sub_2023/providers/current_campaign_provider.dart';
 import 'package:sub4sub_2023/providers/statistic_provider.dart';
 import 'package:sub4sub_2023/providers/user_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import '../main.dart';
 
 class HalamanUtamaPage extends StatefulWidget {
   const HalamanUtamaPage({Key? key}) : super(key: key);
@@ -28,10 +29,32 @@ class HalamanUtamaPage extends StatefulWidget {
 }
 
 class _HalamanUtamaPageState extends State<HalamanUtamaPage> with WidgetsBindingObserver {
-  GoogleSignInAccount? _currentUser;
   final ZoomDrawerController z = ZoomDrawerController();
   final String _newUA= "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36";
   late final WebViewController _controller;
+
+  final GoogleSignIn googleSignIn = GoogleSignIn(
+    scopes: <String>[
+      'email',
+    ],
+  );
+
+  UserModel _userModel = UserModel(
+    id: 0,
+    nama: "",
+    email: "",
+    coin: 0,
+    idDevice: "",
+    os: "",
+    avatar: "",
+    createdAt: "",
+    updatedAt: "",
+  );
+
+  _getDataUser() async {
+    _userModel = await getUser();
+    setState(() {});
+  }
 
   _initProvider(){
     Future.delayed(const Duration(milliseconds: 3000), () {
@@ -72,9 +95,16 @@ class _HalamanUtamaPageState extends State<HalamanUtamaPage> with WidgetsBinding
             "Yes",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
-          onPressed: () {
-            context.pop();
-            googleSignIn.disconnect();
+          onPressed: () async {
+            final prefs = await SharedPreferences.getInstance();
+            bool isGoogle = prefs.getBool('with_google')!;
+            prefs.clear();
+            if(isGoogle) {
+              await googleSignIn.disconnect();
+              context.goNamed('cek_login');
+            }else {
+              context.goNamed('cek_login');
+            }
           },
         )
       ],
@@ -101,9 +131,14 @@ class _HalamanUtamaPageState extends State<HalamanUtamaPage> with WidgetsBinding
             "Yes",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
-          onPressed: () {
-            context.pop();
-            googleSignIn.disconnect();
+          onPressed: () async {
+            final prefs = await SharedPreferences.getInstance();
+            bool isGoogle = prefs.getBool('with_google')!;
+            prefs.clear();
+            if(isGoogle) {
+              googleSignIn.disconnect();
+            }
+            context.goNamed('cek_login');
           },
         )
       ],
@@ -120,33 +155,24 @@ class _HalamanUtamaPageState extends State<HalamanUtamaPage> with WidgetsBinding
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
+    _getDataUser();
     loadSetting();
     _cekVersi();
     context.read<CurrentCampaignProvider>().getData();
     context.read<StatisticProvider>().getData();
-    _currentUser = googleSignIn.currentUser;
     context.read<UserProvider>().getData();
     loadMyCampaign();
     loadFaq();
     loadHalaman();
     loadSubscribe();
     super.initState();
-    googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
-      if(account == null){
-        context.goNamed('login');
-      }
-      setState(() {
-        _currentUser = account;
-      });
-    });
-    googleSignIn.signInSilently();
     _initProvider();
   }
 
@@ -238,7 +264,16 @@ class _HalamanUtamaPageState extends State<HalamanUtamaPage> with WidgetsBinding
                     borderRadius: BorderRadius.circular(100),
                     child: CachedNetworkImage(
                         fit: BoxFit.cover,
-                        imageUrl: _currentUser!.photoUrl ?? ""),
+                        imageUrl: _userModel.avatar,
+                        progressIndicatorBuilder: (context, url, downloadProgress) => Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Image.asset('assets/img/icon/shortcut.png', fit: BoxFit.cover),
+                        ),
+                        errorWidget: (context, url, error) => Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Image.asset('assets/img/icon/shortcut.png', fit: BoxFit.cover),
+                        ),
+                    ),
                   ),
                 ),
               ),
@@ -249,14 +284,14 @@ class _HalamanUtamaPageState extends State<HalamanUtamaPage> with WidgetsBinding
             child: Column(
               children: [
                 Text(
-                  _currentUser!.displayName ?? '',
+                  _userModel.nama,
                   style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
                       color: textHitam),
                 ),
                 Text(
-                  _currentUser!.email,
+                  _userModel.email,
                   style: TextStyle(color: textHitam, height: 0.7),
                 ),
               ],
@@ -345,7 +380,7 @@ class _HalamanUtamaPageState extends State<HalamanUtamaPage> with WidgetsBinding
                   ),
                   onPressed: () async {
                     context.goNamed('loading_campaign', params: {
-                      'email': _currentUser!.email
+                      'email': _userModel.email
                     });
                     // context.goNamed('no_campaign');
                   },

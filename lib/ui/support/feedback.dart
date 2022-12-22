@@ -8,11 +8,12 @@ import 'package:provider/provider.dart';
 import 'package:sub4sub_2023/config/load_data.dart';
 import 'package:sub4sub_2023/config/url.dart';
 import 'package:sub4sub_2023/config/widget.dart';
-import 'package:sub4sub_2023/main.dart';
 import 'package:sub4sub_2023/model/chat_model.dart';
 import 'package:sub4sub_2023/providers/chat_provider.dart';
 
+import '../../config/void.dart';
 import '../../config/warna.dart';
+import '../../model/user_model.dart';
 
 class FeedbackPage extends StatefulWidget {
   const FeedbackPage({Key? key}) : super(key: key);
@@ -37,8 +38,8 @@ class _FeedbackPageState extends State<FeedbackPage> {
   void _kirim() async {
 
     if(_pesan.text.isEmpty) return;
-
-    String email = googleSignIn.currentUser!.email;
+    UserModel userModel = await getUser();
+    String email = userModel.email;
     Dio dio = Dio();
     Map formData = {
       'email': email,
