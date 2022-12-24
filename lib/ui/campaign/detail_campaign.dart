@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:animated_button/animated_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
@@ -116,7 +118,11 @@ class _DetailCampaignState extends State<DetailCampaign> {
 
                         },
                         onPageFinished: (String url) async {
-                          String html = await readHtml(_controller);
+                          String html =  (Platform.isIOS) ? await readHtml(_controller) : await readJS(_controller);
+                          // setState(() {
+                          //   _textContoller.text = html;
+                          //   _textHtml = html;
+                          // });
                           _prosesCek(html);
                         },
                         gestureNavigationEnabled: true,

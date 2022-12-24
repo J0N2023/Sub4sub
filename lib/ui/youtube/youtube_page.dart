@@ -25,8 +25,8 @@ class _YoutubePageState extends State<YoutubePage> {
   late final WebViewController _controller;
 
   Timer? _timer;
-  int _waktu = 3;
-  final int _durasi = 3;
+  int _waktu = 30;
+  final int _durasi = 30;
 
   void _waktuTimer() {
     const oneSec = Duration(seconds: 1);
@@ -95,7 +95,7 @@ class _YoutubePageState extends State<YoutubePage> {
                   },
                   onPageFinished: (String url) async {
                     const script = 'var video = document.querySelector("video");video.play();';
-                    // _controller.runJavascriptReturningResult(script);
+                    _controller.runJavascriptReturningResult(script);
                   },
                   gestureNavigationEnabled: true,
                   backgroundColor: const Color(0x00000000),

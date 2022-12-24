@@ -208,8 +208,12 @@ Future<UserModel> getUser() async {
 }
 
 Map stringToMap(String text){
-  int tanda = text.indexOf('var ytInitialData') + 20;
-  String hasil = text.substring(tanda);
-  hasil = hasil.substring(0, hasil.indexOf('</script>') - 1);
-  return json.decode(hasil);
+  if(Platform.isIOS) {
+    int tanda = text.indexOf('var ytInitialData') + 20;
+    String hasil = text.substring(tanda);
+    hasil = hasil.substring(0, hasil.indexOf('</script>') - 1);
+    return json.decode(hasil);
+  }else{
+    return json.decode(text);
+  }
 }
