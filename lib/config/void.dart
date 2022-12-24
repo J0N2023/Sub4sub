@@ -15,7 +15,28 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import '../model/user_model.dart';
 
-String namaChannel(String text){
+bool statusLogin(String text){
+  Map map = stringToMap(text);
+  String value = map['responseContext']['serviceTrackingParams'][1]['params'][0]['value'].toString();
+  print("Status Login : $value");
+  return (value == "1");
+}
+
+bool statusSubscribe(String text){
+  Map map = stringToMap(text);
+  bool isSubscribe = map['contents']['twoColumnWatchNextResults']['results']['results']['contents'][1]['videoSecondaryInfoRenderer']['subscribeButton']['subscribeButtonRenderer']['subscribed'];
+  print("Subscribe : $isSubscribe");
+  return isSubscribe;
+}
+
+bool statusLike(String text){
+  Map map = stringToMap(text);
+  bool isLike = map['contents']['twoColumnWatchNextResults']['results']['results']['contents'][0]['videoPrimaryInfoRenderer']['videoActions']['menuRenderer']['topLevelButtons'][0]['segmentedLikeDislikeButtonRenderer']['likeButton']['toggleButtonRenderer']['isToggled'];
+  print("Like : $isLike");
+  return isLike;
+}
+
+String namaChannelKampanye(String text){
   if(!text.contains("videoSecondaryInfoRenderer")) return '';
   int cStart = text.indexOf("videoSecondaryInfoRenderer");
   String c1 =  text.substring(cStart);
@@ -24,7 +45,7 @@ String namaChannel(String text){
   return hasil['videoSecondaryInfoRenderer']['owner']['videoOwnerRenderer']['title']['runs'][0]['text'];
 }
 
-String idChannel(String text){
+String idChannelKampanye(String text){
   if(!text.contains("videoSecondaryInfoRenderer")) return '';
   int cStart = text.indexOf("videoSecondaryInfoRenderer");
   String c1 =  text.substring(cStart);
@@ -33,17 +54,7 @@ String idChannel(String text){
   return hasil['videoSecondaryInfoRenderer']['owner']['videoOwnerRenderer']['title']['runs'][0]['navigationEndpoint']['browseEndpoint']['browseId'];
 }
 
-String viewCount(String text){
-  if(!text.contains("videoPrimaryInfoRenderer")) return '';
-  int cStart = text.indexOf("videoPrimaryInfoRenderer");
-  String c1 =  text.substring(cStart);
-  int end = c1.indexOf("videoSecondaryInfoRenderer");
-  Map hasil = json.decode('{"${text.substring(cStart, cStart + end - 3)}');
-  String x = hasil['videoPrimaryInfoRenderer']['viewCount']['videoViewCountRenderer']['viewCount']['simpleText'];
-  return x;
-}
-
-String thumbnails(String text){
+String thumbnailsKampanye(String text){
   int cStart = text.indexOf('<meta property="og:image"') + 35;
   String c1 =  text.substring(cStart);
   int end = c1.indexOf(">");
@@ -51,7 +62,7 @@ String thumbnails(String text){
   return x;
 }
 
-String judulVideo(String text){
+String judulKampanye(String text){
   int cStart = text.indexOf('<meta property="og:title"') + 35;
   String c1 =  text.substring(cStart);
   int end = c1.indexOf(">");
@@ -59,7 +70,7 @@ String judulVideo(String text){
   return x;
 }
 
-String deskripsi(String text){
+String deskripsiKampanye(String text){
   int cStart = text.indexOf('<meta property="og:description"') + 41;
   String c1 =  text.substring(cStart);
   int end = c1.indexOf(">");
@@ -67,57 +78,12 @@ String deskripsi(String text){
   return x;
 }
 
-String idVideo(String text){
+String idVideoKampanye(String text){
   int cStart = text.indexOf('//m.youtube.com/watch?v=');
   String c1 =  text.substring(cStart);
   int end = c1.indexOf(">");
   String x = text.substring(cStart + 24, cStart + end - 1);
   return x;
-}
-
-bool statusLogin(String text){
-  if(text.contains('"logged_in"')) {
-    int cStart = text.indexOf('"logged_in"');
-    String x = text.substring(cStart);
-    String z = x.replaceAll('\n', '').replaceAll(' ', '');
-    int m = 18;
-    String a = z.substring(m, m + 1);
-    return (a == "1");
-  }else{
-    return false;
-  }
-}
-
-bool statusSubscribe(String text){
-  int cStart = text.indexOf('subscribed = ');
-  String x = text.substring(cStart);
-  String z = x.replaceAll('\n', '').replaceAll(' ', '');
-  int m = 11;
-  String a = z.substring(m, m + 1);
-  return (a == "1");
-}
-
-bool statusLike(String text){
-  int c1 = text.indexOf('segmentedLikeDislikeButtonRenderer');
-  String x1 = text.substring(c1);
-  // String z = x1.replaceAll('\n', '').replaceAll(' ', '');
-  int c2 = x1.indexOf(' likeButton');
-  String x2 = x1.substring(c2);
-  int c3 = x2.indexOf('isToggled') + 12;
-  String a = x2.substring(c3, c3+1);
-  return (a == "1");
-}
-
-Future<String> readJS(WebViewController controller) async{
-  const script = "ytInitialData";
-  String html = await controller.runJavascriptReturningResult(script);
-  return html;
-}
-
-Future<String> readHtml(WebViewController controller) async{
-  const script = "document.documentElement.outerHTML";
-  String html = await controller.runJavascriptReturningResult(script);
-  return html;
 }
 
 Future<String> myChannel(String text) async {
@@ -137,6 +103,20 @@ Future<String> myChannel(String text) async {
 Future<String> myIdChannel() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
   return preferences.getString('id_channel')!;
+}
+
+// ------------------------------------------------------------------------------
+
+Future<String> readJS(WebViewController controller) async{
+  const script = "ytInitialData";
+  String html = await controller.runJavascriptReturningResult(script);
+  return html;
+}
+
+Future<String> readHtml(WebViewController controller) async{
+  const script = "document.documentElement.outerHTML";
+  String html = await controller.runJavascriptReturningResult(script);
+  return html;
 }
 
 String formatCoin(int n) {
@@ -180,13 +160,14 @@ String myAvatar(String text){
 }
 
 String myChannelName(String text){
-  if(!text.contains("displayName")) return '';
-  int i1 = text.indexOf("displayName");
-  String s1 =  text.substring(i1);
-  int i2 = s1.indexOf('simpleText = "');
-  String s2 = s1.substring(i2);
-  int i3 = s2.indexOf('";');
-  return s2.substring(14, i3);
+  String chName = text;
+  if(!text.contains("displayName")) return 'xxx';
+  int tanda = text.indexOf('displayName');
+  chName = chName.substring(tanda);
+  int stringStart = chName.indexOf('{');
+  int stringEnd = chName.indexOf('}') + 1;
+  Map hasil = json.decode(chName.substring(stringStart, stringEnd));
+  return hasil['simpleText'];
 }
 
 String kFormat(int number){
@@ -224,4 +205,11 @@ Future<UserModel> getUser() async {
   Map json = jsonDecode(prefs.getString('user')!);
   UserModel model = UserModel.fromMap(json);
   return model;
+}
+
+Map stringToMap(String text){
+  int tanda = text.indexOf('var ytInitialData') + 20;
+  String hasil = text.substring(tanda);
+  hasil = hasil.substring(0, hasil.indexOf('</script>') - 1);
+  return json.decode(hasil);
 }

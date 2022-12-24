@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:provider/provider.dart';
-import 'package:sub4sub_2023/config/warna.dart';
 import 'package:sub4sub_2023/config/widget.dart';
-import 'package:sub4sub_2023/model/faq_model.dart';
 import 'package:sub4sub_2023/providers/halaman_provider.dart';
 
 class HalamanPage extends StatefulWidget {

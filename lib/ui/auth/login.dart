@@ -12,7 +12,6 @@ import 'package:sub4sub_2023/model/user_model.dart';
 
 import '../../config/url.dart';
 import '../../config/void.dart';
-import '../../main.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);

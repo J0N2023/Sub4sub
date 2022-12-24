@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sub4sub_2023/cek_login.dart';
 import 'package:sub4sub_2023/model/campaign_model.dart';
 import 'package:sub4sub_2023/model/faq_model.dart';

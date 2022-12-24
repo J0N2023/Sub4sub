@@ -41,12 +41,12 @@ class _CreateCampaignState extends State<CreateCampaign> {
     if(!_urlVideo.text.contains('https')) _urlVideo.text = 'https://${_urlVideo.text}';
     var response = await http.get(Uri.parse(_urlVideo.text));
     if(response.statusCode == 200){
-      _nameChannel = namaChannel(response.body);
-      _idChannel = idChannel(response.body);
-      _title = judulVideo(response.body);
-      _deskripsi = deskripsi(response.body);
-      _idVideo = idVideo(response.body);
-      _thumbnails = thumbnails(response.body);
+      _nameChannel = namaChannelKampanye(response.body);
+      _idChannel = idChannelKampanye(response.body);
+      _title = judulKampanye(response.body);
+      _deskripsi = deskripsiKampanye(response.body);
+      _idVideo = idVideoKampanye(response.body);
+      _thumbnails = thumbnailsKampanye(response.body);
       setState(() {
         _foundVideo = (_idChannel != '');
         if(_idChannel == '') _error();

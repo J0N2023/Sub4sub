@@ -68,6 +68,7 @@ class _DetailCampaignState extends State<DetailCampaign> {
   }
 
   _prosesCek(String hasil) async {
+    print(myChannelName(hasil));
       bool ss = statusSubscribe(hasil);
       bool sl = statusLike(hasil);
       _statusSubcribe = (ss) ? 1 : 2;
@@ -115,8 +116,8 @@ class _DetailCampaignState extends State<DetailCampaign> {
 
                         },
                         onPageFinished: (String url) async {
-                          String hasil = await readJS(_controller);
-                          _prosesCek(hasil);
+                          String html = await readHtml(_controller);
+                          _prosesCek(html);
                         },
                         gestureNavigationEnabled: true,
                         backgroundColor: const Color(0x00000000),
