@@ -40,7 +40,7 @@ class _DetailCampaignState extends State<DetailCampaign> {
 
   String html = "";
 
-  _claimCoin(String id, String chName, String avatar)  async {
+  _claimCoin(String id, String avatar)  async {
     UserModel userModel = await getUser();
     String email = userModel.email;
     Dio dio = Dio();
@@ -48,7 +48,7 @@ class _DetailCampaignState extends State<DetailCampaign> {
       'id_campaign': widget.model.id,
       'email': email,
       'channel_subscriber': id,
-      'channel_name': chName,
+      'channel_name': id,
       'avatar': avatar,
       'signature': generateMd5('claim${widget.model.id}$email$id')
     });
@@ -72,27 +72,31 @@ class _DetailCampaignState extends State<DetailCampaign> {
   }
 
   _prosesCek(String hasil) async {
-    String x = (Platform.isIOS) ? extracString(hasil) : hasil;
+    String x = (Platform.isIOS) ? await extracString(hasil) : hasil;
 
-    // print("Is Login : ${statusLogin(x)}");
-    // print("Subscribe : ${statusSubscribe(x)}");
-    // print("Like : ${statusLike(x)}");
-    // print("MyAvatar : ${myAvatar(x)}");
-    // print("My Channel Name : ${myChannelName(x)}");
-    // String idCh = await myChannelId(x);
-    // print("My Channel ID : ${idCh}");
+    print("Is Login : ${statusLogin(x)}");
+    print("Subscribe : ${statusSubscribe(x)}");
+    print("Like : ${statusLike(x)}");
+    print("MyAvatar : ${myAvatar(x)}");
+    String idCh = await myChannelId(x);
+    print("My Channel ID : ${idCh}");
 
-    bool ss = statusSubscribe(x);
-    bool sl = statusLike(x);
-    _statusSubcribe = (ss) ? 1 : 2;
-    _statusLike = (sl) ? 1 : 2;
-    _allDone = (ss && sl);
-    if(_allDone) {
-      String id = await myChannelId(x);
-      String chName = myChannelName(x);
-      String avatar = myAvatar(x);
-      _claimCoin(id, chName, avatar);
+    if(statusLogin(x)) {
+      bool ss = statusSubscribe(x);
+      bool sl = statusLike(x);
+      _statusSubcribe = (ss) ? 1 : 2;
+      _statusLike = (sl) ? 1 : 2;
+      _allDone = (ss && sl);
+      if (_allDone) {
+        String id = await myChannelId(x);
+        String avatar = myAvatar(x);
+        _claimCoin(id, avatar);
+      }
+    }else{
+      _statusLike = 2;
+      _statusSubcribe = 2;
     }
+
     setState(() {});
   }
 

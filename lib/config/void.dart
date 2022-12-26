@@ -106,40 +106,13 @@ Future<String> myChannelId(String text) async {
   [2]
   ['compactLinkRenderer']
   ['navigationEndpoint']
-  ['commandMetadata']
-  ['webCommandMetadata']
-  ['url'] ?? 'xxx';
-
-  if(x != 'xxx'){
-    int e = x.indexOf('/community');
-    x = x.substring(9, e);
-  }
+  ['browseEndpoint']
+  ['browseId'];
 
   preferences.setString('id_channel', x);
   return x;
 }
 
-String myChannelName(String text){
-  Map data = json.decode(text);
-  String x = data
-  ['contents']
-  ['twoColumnWatchNextResults']
-  ['results']
-  ['results']
-  ['contents']
-  [2]
-  ['itemSectionRenderer']
-  ['contents']
-  [0]
-  ['commentsEntryPointHeaderRenderer']
-  ['contentRenderer']
-  ['commentsSimpleboxRenderer']
-  ['simpleboxAvatar']
-  ['accessibility']
-  ['accessibilityData']
-  ['label'] ?? 'xxx';
-  return x;
-}
 
 String myAvatar(String text){
   Map data = json.decode(text);
