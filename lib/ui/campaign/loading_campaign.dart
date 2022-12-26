@@ -19,7 +19,7 @@ class LoadingCampaign extends StatefulWidget {
 class _LoadingCampaignState extends State<LoadingCampaign> {
 
   _initData() async {
-    String idCh = await myIdChannel();
+    String idCh = await idChannelTersimpan();
     Dio dio = Dio();
     Response response = await dio.get("$apiUrl/load_campaign/${widget.email}/$idCh");
     if(response.data['status']){

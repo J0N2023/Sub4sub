@@ -25,8 +25,8 @@ class _YoutubePageState extends State<YoutubePage> {
   late final WebViewController _controller;
 
   Timer? _timer;
-  int _waktu = 30;
-  final int _durasi = 30;
+  int _waktu = 3;
+  final int _durasi = 3;
 
   void _waktuTimer() {
     const oneSec = Duration(seconds: 1);
@@ -80,11 +80,13 @@ class _YoutubePageState extends State<YoutubePage> {
                   initialUrl: widget.urlYoutube,
                   javascriptMode: JavascriptMode.unrestricted,
                   navigationDelegate: (NavigationRequest request) {
+                    print(request.url);
                     if(request.url.startsWith('https://accounts')){
                       _inVideo = false;
                     }else{
                       _inVideo = true;
                     }
+                    setState(() {});
                     return NavigationDecision.navigate;
                   },
                   onWebViewCreated: (WebViewController webViewController) async {
@@ -95,7 +97,7 @@ class _YoutubePageState extends State<YoutubePage> {
                   },
                   onPageFinished: (String url) async {
                     const script = 'var video = document.querySelector("video");video.play();';
-                    _controller.runJavascriptReturningResult(script);
+                    // _controller.runJavascriptReturningResult(script);
                   },
                   gestureNavigationEnabled: true,
                   backgroundColor: const Color(0x00000000),

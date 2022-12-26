@@ -4,7 +4,7 @@
     <uses-permission android:name="com.android.vending.BILLING"/>
 
    <application
-        android:label="Sub4sub 2023"
+        android:label="Sub4sub Pro"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

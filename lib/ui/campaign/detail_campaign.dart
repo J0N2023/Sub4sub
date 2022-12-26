@@ -38,6 +38,8 @@ class _DetailCampaignState extends State<DetailCampaign> {
   bool _showDialog = false;
   bool _goAgain = false;
 
+  String html = "";
+
   _claimCoin(String id, String chName, String avatar)  async {
     UserModel userModel = await getUser();
     String email = userModel.email;
@@ -70,19 +72,28 @@ class _DetailCampaignState extends State<DetailCampaign> {
   }
 
   _prosesCek(String hasil) async {
-    print(myChannelName(hasil));
-      bool ss = statusSubscribe(hasil);
-      bool sl = statusLike(hasil);
-      _statusSubcribe = (ss) ? 1 : 2;
-      _statusLike = (sl) ? 1 : 2;
-      _allDone = (ss && sl);
-      if(_allDone) {
-        String id = await myChannel(hasil);
-        String chName = myChannelName(hasil);
-        String avatar = myAvatar(hasil);
-        _claimCoin(id, chName, avatar);
-      }
-      setState(() {});
+    String x = (Platform.isIOS) ? extracString(hasil) : hasil;
+
+    // print("Is Login : ${statusLogin(x)}");
+    // print("Subscribe : ${statusSubscribe(x)}");
+    // print("Like : ${statusLike(x)}");
+    // print("MyAvatar : ${myAvatar(x)}");
+    // print("My Channel Name : ${myChannelName(x)}");
+    // String idCh = await myChannelId(x);
+    // print("My Channel ID : ${idCh}");
+
+    bool ss = statusSubscribe(x);
+    bool sl = statusLike(x);
+    _statusSubcribe = (ss) ? 1 : 2;
+    _statusLike = (sl) ? 1 : 2;
+    _allDone = (ss && sl);
+    if(_allDone) {
+      String id = await myChannelId(x);
+      String chName = myChannelName(x);
+      String avatar = myAvatar(x);
+      _claimCoin(id, chName, avatar);
+    }
+    setState(() {});
   }
 
   @override
@@ -118,11 +129,11 @@ class _DetailCampaignState extends State<DetailCampaign> {
 
                         },
                         onPageFinished: (String url) async {
-                          String html =  (Platform.isIOS) ? await readHtml(_controller) : await readJS(_controller);
-                          // setState(() {
-                          //   _textContoller.text = html;
-                          //   _textHtml = html;
-                          // });
+                          if(Platform.isAndroid) {
+                            html = await readJS(_controller);
+                          }else{
+                            html = await readHtml(_controller);
+                          }
                           _prosesCek(html);
                         },
                         gestureNavigationEnabled: true,

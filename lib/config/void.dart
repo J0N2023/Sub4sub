@@ -16,25 +16,25 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../model/user_model.dart';
 
 bool statusLogin(String text){
-  Map map = stringToMap(text);
-  String value = map['responseContext']['serviceTrackingParams'][1]['params'][0]['value'].toString();
-  print("Status Login : $value");
-  return (value == "1");
+  Map data = json.decode(text);
+  String x = data['responseContext']['serviceTrackingParams'][1]['params'][0]['value'];
+  return (x == "1");
 }
 
 bool statusSubscribe(String text){
-  Map map = stringToMap(text);
-  bool isSubscribe = map['contents']['twoColumnWatchNextResults']['results']['results']['contents'][1]['videoSecondaryInfoRenderer']['subscribeButton']['subscribeButtonRenderer']['subscribed'];
-  print("Subscribe : $isSubscribe");
+  Map data = json.decode(text);
+  bool isSubscribe = data['contents']['twoColumnWatchNextResults']['results']['results']['contents'][1]['videoSecondaryInfoRenderer']['subscribeButton']['subscribeButtonRenderer']['subscribed'];
   return isSubscribe;
 }
 
 bool statusLike(String text){
-  Map map = stringToMap(text);
-  bool isLike = map['contents']['twoColumnWatchNextResults']['results']['results']['contents'][0]['videoPrimaryInfoRenderer']['videoActions']['menuRenderer']['topLevelButtons'][0]['segmentedLikeDislikeButtonRenderer']['likeButton']['toggleButtonRenderer']['isToggled'];
-  print("Like : $isLike");
+  Map data = json.decode(text);
+  bool isLike = data['contents']['twoColumnWatchNextResults']['results']['results']['contents'][0]['videoPrimaryInfoRenderer']['videoActions']['menuRenderer']['topLevelButtons'][0]['segmentedLikeDislikeButtonRenderer']['likeButton']['toggleButtonRenderer']['isToggled'];
   return isLike;
 }
+
+
+// ------------------------------------------------------------------------------
 
 String namaChannelKampanye(String text){
   if(!text.contains("videoSecondaryInfoRenderer")) return '';
@@ -86,22 +86,79 @@ String idVideoKampanye(String text){
   return x;
 }
 
-Future<String> myChannel(String text) async {
+// ------------------------------------------------------------------------------
+
+Future<String> myChannelId(String text) async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
-  if(text.contains('community?show_create_dialog')) {
-    int cari1 = text.indexOf('community?show_create_dialog');
-    String x = text.substring(cari1 - 100, cari1 - 1);
-    String id = x.substring(x.indexOf('/channel/') + 9);
-    preferences.setString('id_channel', id);
-    return id;
-  }else{
-    preferences.setString('id_channel', 'xxx');
-    return 'xxx';
+  Map data = json.decode(text);
+  String x = data
+  ['topbar']
+  ['desktopTopbarRenderer']
+  ['topbarButtons']
+  [0]
+  ['topbarMenuButtonRenderer']
+  ['menuRenderer']
+  ['multiPageMenuRenderer']
+  ['sections']
+  [0]
+  ['multiPageMenuSectionRenderer']
+  ['items']
+  [2]
+  ['compactLinkRenderer']
+  ['navigationEndpoint']
+  ['commandMetadata']
+  ['webCommandMetadata']
+  ['url'] ?? 'xxx';
+
+  if(x != 'xxx'){
+    int e = x.indexOf('/community');
+    x = x.substring(9, e);
   }
+
+  preferences.setString('id_channel', x);
+  return x;
 }
 
-Future<String> myIdChannel() async {
+String myChannelName(String text){
+  Map data = json.decode(text);
+  String x = data
+  ['contents']
+  ['twoColumnWatchNextResults']
+  ['results']
+  ['results']
+  ['contents']
+  [2]
+  ['itemSectionRenderer']
+  ['contents']
+  [0]
+  ['commentsEntryPointHeaderRenderer']
+  ['contentRenderer']
+  ['commentsSimpleboxRenderer']
+  ['simpleboxAvatar']
+  ['accessibility']
+  ['accessibilityData']
+  ['label'] ?? 'xxx';
+  return x;
+}
+
+String myAvatar(String text){
+  Map data = json.decode(text);
+  String x = data
+  ['topbar']
+  ['desktopTopbarRenderer']
+  ['topbarButtons']
+  [2]
+  ['topbarMenuButtonRenderer']
+  ['avatar']
+  ['thumbnails']
+  [0]
+  ['url'] ?? "";
+  return x;
+}
+
+Future<String> idChannelTersimpan() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
+  if(!preferences.containsKey('id_channel')) return 'xxx';
   return preferences.getString('id_channel')!;
 }
 
@@ -148,28 +205,6 @@ int appVersi(){
   }
 }
 
-String myAvatar(String text){
-  if(!text.contains("userAvatar")) return '';
-  int cStart = text.indexOf("userAvatar");
-  String c1 =  text.substring(cStart);
-  int cStart2 = c1.indexOf("url");
-  String c2 =  c1.substring(cStart2);
-  String x = c2.substring(7);
-  int cStart3 = x.indexOf('"');
-  return x.substring(0, cStart3);
-}
-
-String myChannelName(String text){
-  String chName = text;
-  if(!text.contains("displayName")) return 'xxx';
-  int tanda = text.indexOf('displayName');
-  chName = chName.substring(tanda);
-  int stringStart = chName.indexOf('{');
-  int stringEnd = chName.indexOf('}') + 1;
-  Map hasil = json.decode(chName.substring(stringStart, stringEnd));
-  return hasil['simpleText'];
-}
-
 String kFormat(int number){
   return NumberFormat.compactCurrency(
     decimalDigits: 2,
@@ -207,13 +242,10 @@ Future<UserModel> getUser() async {
   return model;
 }
 
-Map stringToMap(String text){
-  if(Platform.isIOS) {
-    int tanda = text.indexOf('var ytInitialData') + 20;
-    String hasil = text.substring(tanda);
-    hasil = hasil.substring(0, hasil.indexOf('</script>') - 1);
-    return json.decode(hasil);
-  }else{
-    return json.decode(text);
-  }
+String extracString(String text){
+  if(!text.contains('var ytInitialData')) return 'Tidak ditemukan';
+  int tanda = text.indexOf('var ytInitialData') + 20;
+  String hasil = text.substring(tanda);
+  hasil = hasil.substring(0, hasil.indexOf('</script>') - 1);
+  return hasil;
 }

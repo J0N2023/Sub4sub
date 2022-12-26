@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'package:animated_button/animated_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_zoom_drawer/config.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sub4sub_2023/config/load_data.dart';
@@ -145,6 +147,17 @@ class _HalamanUtamaPageState extends State<HalamanUtamaPage> with WidgetsBinding
     ).show();
   }
 
+  Future<void> _initPlatformState() async {
+    await Purchases.setDebugLogsEnabled(true);
+    PurchasesConfiguration? configuration;
+    if (Platform.isAndroid) {
+      configuration = PurchasesConfiguration("goog_jfZLyhconJDjSIYXrapDdldBXJQ");
+    } else if (Platform.isIOS) {
+      configuration = PurchasesConfiguration("appl_YtbeTdAWvsuinoUURJlVnFGISyZ");
+    }
+    await Purchases.configure(configuration!);
+  }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
@@ -174,6 +187,7 @@ class _HalamanUtamaPageState extends State<HalamanUtamaPage> with WidgetsBinding
     loadSubscribe();
     super.initState();
     _initProvider();
+    _initPlatformState();
   }
 
   @override
@@ -216,29 +230,28 @@ class _HalamanUtamaPageState extends State<HalamanUtamaPage> with WidgetsBinding
               SizedBox(
                 height: 1,
                 width: 1,
-                child: WebView(
-                  userAgent: _newUA,
-                  initialUrl: 'https://m.youtube.com/watch?v=sdCy9NiMwvc',
-                  javascriptMode: JavascriptMode.unrestricted,
-                  onWebViewCreated: (WebViewController webViewController) async {
-                    _controller = webViewController;
-                  },
-                  onProgress: (int progress) {
-
-                  },
-                  navigationDelegate: (NavigationRequest request) {
-                    return NavigationDecision.navigate;
-                  },
-                  onPageStarted: (String url) {
-
-                  },
-                  onPageFinished: (String url) async {
-                    String hasil = await readJS(_controller);
-                    myChannel(hasil);
-                  },
-                  gestureNavigationEnabled: true,
-                  backgroundColor: const Color(0x00000000),
-                ),
+                // child: WebView(
+                //   userAgent: _newUA,
+                //   initialUrl: 'https://m.youtube.com/watch?v=sdCy9NiMwvc',
+                //   javascriptMode: JavascriptMode.unrestricted,
+                //   onWebViewCreated: (WebViewController webViewController) async {
+                //     _controller = webViewController;
+                //   },
+                //   onProgress: (int progress) {
+                //
+                //   },
+                //   navigationDelegate: (NavigationRequest request) {
+                //     return NavigationDecision.navigate;
+                //   },
+                //   onPageStarted: (String url) {
+                //
+                //   },
+                //   onPageFinished: (String url) async {
+                //     String hasil = await readJS(_controller);
+                //     myChannel(hasil);
+                //
+                //   },
+                // ),
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 50.0),
@@ -540,7 +553,7 @@ class _HalamanUtamaPageState extends State<HalamanUtamaPage> with WidgetsBinding
                 textAlign: TextAlign.center,
                 style: TextStyle(color: textHitam, fontSize: 10, height: 0.9),
               ),
-              (title == 'Coinsx')
+              (title == 'Coins')
                   ? Padding(
                     padding: const EdgeInsets.only(top: 5.0),
                     child: AnimatedButton(
@@ -562,6 +575,15 @@ class _HalamanUtamaPageState extends State<HalamanUtamaPage> with WidgetsBinding
                         ),
                         onPressed: () async {
 
+                          try {
+                            Offerings offerings = await Purchases.getOfferings();
+                            if (offerings.current != null) {
+                              print(offerings.current!.availablePackages.first.storeProduct.title);
+                              await Purchases.purchaseProduct(offerings.current!.availablePackages.first.storeProduct.identifier);
+                            }
+                          } on PlatformException catch (e) {
+                            // optional error handling
+                          }
                         },
                       ),
                   )
