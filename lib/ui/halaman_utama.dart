@@ -227,32 +227,6 @@ class _HalamanUtamaPageState extends State<HalamanUtamaPage> with WidgetsBinding
           Stack(
             alignment: AlignmentDirectional.bottomCenter,
             children: [
-              SizedBox(
-                height: 1,
-                width: 1,
-                // child: WebView(
-                //   userAgent: _newUA,
-                //   initialUrl: 'https://m.youtube.com/watch?v=sdCy9NiMwvc',
-                //   javascriptMode: JavascriptMode.unrestricted,
-                //   onWebViewCreated: (WebViewController webViewController) async {
-                //     _controller = webViewController;
-                //   },
-                //   onProgress: (int progress) {
-                //
-                //   },
-                //   navigationDelegate: (NavigationRequest request) {
-                //     return NavigationDecision.navigate;
-                //   },
-                //   onPageStarted: (String url) {
-                //
-                //   },
-                //   onPageFinished: (String url) async {
-                //     String hasil = await readJS(_controller);
-                //     myChannel(hasil);
-                //
-                //   },
-                // ),
-              ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 50.0),
                 child: SizedBox(
@@ -553,7 +527,7 @@ class _HalamanUtamaPageState extends State<HalamanUtamaPage> with WidgetsBinding
                 textAlign: TextAlign.center,
                 style: TextStyle(color: textHitam, fontSize: 10, height: 0.9),
               ),
-              (title == 'Coins')
+              (title == 'Coinsx')
                   ? Padding(
                     padding: const EdgeInsets.only(top: 5.0),
                     child: AnimatedButton(
