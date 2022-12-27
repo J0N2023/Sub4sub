@@ -1,7 +1,7 @@
 name: sub4sub_2023
 description: Sub4sub Application 2023
 publish_to: 'none'
-version: 1.0.6
+version: 1.0.7
 
 environment:
   sdk: '>=2.19.0-444.0.dev <3.0.0'

@@ -120,6 +120,7 @@ Future<String> myChannelId(String text) async {
 
 
 String myAvatar(String text){
+  if(!text.contains('avatar')) return '';
   Map data = json.decode(text);
   String x = data
   ['topbar']
@@ -130,7 +131,7 @@ String myAvatar(String text){
   ['avatar']
   ['thumbnails']
   [0]
-  ['url'] ?? "";
+  ['url'];
   return x;
 }
 
