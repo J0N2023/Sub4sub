@@ -1,13 +1,11 @@
 import 'dart:io';
 import 'package:animated_button/animated_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_zoom_drawer/config.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
-import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sub4sub_2023/config/load_data.dart';
@@ -21,7 +19,6 @@ import 'package:sub4sub_2023/model/user_model.dart';
 import 'package:sub4sub_2023/providers/current_campaign_provider.dart';
 import 'package:sub4sub_2023/providers/statistic_provider.dart';
 import 'package:sub4sub_2023/providers/user_provider.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 class HalamanUtamaPage extends StatefulWidget {
   const HalamanUtamaPage({Key? key}) : super(key: key);
@@ -32,8 +29,6 @@ class HalamanUtamaPage extends StatefulWidget {
 
 class _HalamanUtamaPageState extends State<HalamanUtamaPage> with WidgetsBindingObserver {
   final ZoomDrawerController z = ZoomDrawerController();
-  final String _newUA= "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36";
-  late final WebViewController _controller;
 
   final GoogleSignIn googleSignIn = GoogleSignIn(
     scopes: <String>[
@@ -147,17 +142,6 @@ class _HalamanUtamaPageState extends State<HalamanUtamaPage> with WidgetsBinding
     ).show();
   }
 
-  Future<void> _initPlatformState() async {
-    await Purchases.setDebugLogsEnabled(true);
-    PurchasesConfiguration? configuration;
-    if (Platform.isAndroid) {
-      configuration = PurchasesConfiguration("goog_jfZLyhconJDjSIYXrapDdldBXJQ");
-    } else if (Platform.isIOS) {
-      configuration = PurchasesConfiguration("appl_YtbeTdAWvsuinoUURJlVnFGISyZ");
-    }
-    await Purchases.configure(configuration!);
-  }
-
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
@@ -187,7 +171,6 @@ class _HalamanUtamaPageState extends State<HalamanUtamaPage> with WidgetsBinding
     loadSubscribe();
     super.initState();
     _initProvider();
-    _initPlatformState();
   }
 
   @override
@@ -527,40 +510,31 @@ class _HalamanUtamaPageState extends State<HalamanUtamaPage> with WidgetsBinding
                 textAlign: TextAlign.center,
                 style: TextStyle(color: textHitam, fontSize: 10, height: 0.9),
               ),
-              (title == 'Coinsx')
+              (title == 'Coins')
                   ? Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: AnimatedButton(
-                        color: Colors.green.shade700,
-                        height: 30,
-                        width: 80,
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10.0),
-                          child: Center(
-                            child: Text('Buy Coin',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12
-                              ),
-                            ),
-                          ),
+                padding: const EdgeInsets.only(top: 5.0),
+                child: AnimatedButton(
+                  color: Colors.green.shade700,
+                  height: 30,
+                  width: 80,
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Center(
+                      child: Text('Buy Coin',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12
                         ),
-                        onPressed: () async {
-
-                          try {
-                            Offerings offerings = await Purchases.getOfferings();
-                            if (offerings.current != null) {
-                              print(offerings.current!.availablePackages.first.storeProduct.title);
-                              await Purchases.purchaseProduct(offerings.current!.availablePackages.first.storeProduct.identifier);
-                            }
-                          } on PlatformException catch (e) {
-                            // optional error handling
-                          }
-                        },
                       ),
-                  )
+                    ),
+                  ),
+                  onPressed: () async {
+                      context.goNamed('beli_koin');
+                  },
+                ),
+              )
                   : const SizedBox()
 
             ],

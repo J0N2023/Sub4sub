@@ -39,6 +39,7 @@ class _DetailCampaignState extends State<DetailCampaign> {
   bool _goAgain = false;
 
   String html = "";
+  TextEditingController _textEditingController = TextEditingController();
 
   _claimCoin(String id, String avatar)  async {
     UserModel userModel = await getUser();
@@ -74,6 +75,7 @@ class _DetailCampaignState extends State<DetailCampaign> {
   _prosesCek(String hasil) async {
     String x = (Platform.isIOS) ? await extracString(hasil) : hasil;
 
+    _textEditingController.text = x;
     print("Is Login : ${statusLogin(x)}");
     print("Subscribe : ${statusSubscribe(x)}");
     print("Like : ${statusLike(x)}");
@@ -305,6 +307,14 @@ class _DetailCampaignState extends State<DetailCampaign> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
+        // TextField(
+        //   controller: _textEditingController,
+        //   decoration: InputDecoration(
+        //     border: OutlineInputBorder(
+        //         borderRadius: BorderRadius.circular(10)
+        //     ),
+        //   ),
+        // ),
         Center(
           child: Text('Checking like and subscribe', style: TextStyle(
               color: textHitam,

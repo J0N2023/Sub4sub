@@ -2,6 +2,7 @@
     package="com.alfatihlab.sub4sub_2023">
 
     <uses-permission android:name="com.android.vending.BILLING"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 
    <application
         android:label="Sub4sub Pro"

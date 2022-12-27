@@ -90,6 +90,11 @@ String idVideoKampanye(String text){
 
 Future<String> myChannelId(String text) async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
+  if(!text.contains('community?show_create_dialog')){
+    UserModel model = await getUser();
+    preferences.setString('id_channel', model.email);
+    return model.email;
+  }
   Map data = json.decode(text);
   String x = data
   ['topbar']
