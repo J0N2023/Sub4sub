@@ -39,7 +39,6 @@ class _DetailCampaignState extends State<DetailCampaign> {
   bool _goAgain = false;
 
   String html = "";
-  TextEditingController _textEditingController = TextEditingController();
 
   _claimCoin(String id, String avatar)  async {
     UserModel userModel = await getUser();
@@ -75,22 +74,22 @@ class _DetailCampaignState extends State<DetailCampaign> {
   _prosesCek(String hasil) async {
     String x = (Platform.isIOS) ? await extracString(hasil) : hasil;
 
-    _textEditingController.text = x;
-    print("Is Login : ${statusLogin(x)}");
-    print("Subscribe : ${statusSubscribe(x)}");
-    print("Like : ${statusLike(x)}");
-    print("MyAvatar : ${myAvatar(x)}");
-    String idCh = await myChannelId(x);
-    print("My Channel ID : ${idCh}");
-
     if(statusLogin(x)) {
+      String idCh = await myChannelId(x);
+      print("Is Login : ${statusLogin(x)}");
+      print("Subscribe : ${statusSubscribe(x)}");
+      print("Like : ${statusLike(x)}");
+      print("MyAvatar : ${myAvatar(x)}");
+      print("My Channel ID : ${idCh}");
+
       bool ss = statusSubscribe(x);
       bool sl = statusLike(x);
+
       _statusSubcribe = (ss) ? 1 : 2;
       _statusLike = (sl) ? 1 : 2;
       _allDone = (ss && sl);
       if (_allDone) {
-        String id = await myChannelId(x);
+        String id = idCh;
         String avatar = myAvatar(x);
         _claimCoin(id, avatar);
       }

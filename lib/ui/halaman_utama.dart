@@ -19,6 +19,7 @@ import 'package:sub4sub_2023/model/user_model.dart';
 import 'package:sub4sub_2023/providers/current_campaign_provider.dart';
 import 'package:sub4sub_2023/providers/statistic_provider.dart';
 import 'package:sub4sub_2023/providers/user_provider.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class HalamanUtamaPage extends StatefulWidget {
   const HalamanUtamaPage({Key? key}) : super(key: key);
@@ -29,6 +30,9 @@ class HalamanUtamaPage extends StatefulWidget {
 
 class _HalamanUtamaPageState extends State<HalamanUtamaPage> with WidgetsBindingObserver {
   final ZoomDrawerController z = ZoomDrawerController();
+
+  final String _newUA= "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36";
+  late final WebViewController _controller;
 
   final GoogleSignIn googleSignIn = GoogleSignIn(
     scopes: <String>[
@@ -207,6 +211,34 @@ class _HalamanUtamaPageState extends State<HalamanUtamaPage> with WidgetsBinding
       ),
       body: ListView(
         children: [
+          SizedBox(
+            height: 0,
+            width: 0,
+            child: WebView(
+              userAgent: _newUA,
+              initialUrl: 'https://m.youtube.com/watch?v=sdCy9NiMwvc',
+              javascriptMode: JavascriptMode.unrestricted,
+              onWebViewCreated: (WebViewController webViewController) async {
+                _controller = webViewController;
+              },
+              onProgress: (int progress) {
+                print(progress);
+              },
+              onPageFinished: (String url) async {
+                String html;
+                if(Platform.isAndroid) {
+                  html = await readJS(_controller);
+                }else{
+                  html = await readHtml(_controller);
+                }
+                String x = (Platform.isIOS) ? await extracString(html) : html;
+                String ch = await myChannelId(x);
+                print('ID Channel anda : $ch');
+              },
+              gestureNavigationEnabled: true,
+              backgroundColor: const Color(0x00000000),
+            ),
+          ),
           Stack(
             alignment: AlignmentDirectional.bottomCenter,
             children: [
@@ -510,7 +542,7 @@ class _HalamanUtamaPageState extends State<HalamanUtamaPage> with WidgetsBinding
                 textAlign: TextAlign.center,
                 style: TextStyle(color: textHitam, fontSize: 10, height: 0.9),
               ),
-              (title == 'Coins')
+              (title == 'Coinsx')
                   ? Padding(
                 padding: const EdgeInsets.only(top: 5.0),
                 child: AnimatedButton(
