@@ -17,6 +17,7 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:sub4sub_2023/model/setting_model.dart';
 import 'package:sub4sub_2023/model/user_model.dart';
 import 'package:sub4sub_2023/providers/current_campaign_provider.dart';
+import 'package:sub4sub_2023/providers/setting_provider.dart';
 import 'package:sub4sub_2023/providers/statistic_provider.dart';
 import 'package:sub4sub_2023/providers/user_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -283,20 +284,25 @@ class _HalamanUtamaPageState extends State<HalamanUtamaPage> with WidgetsBinding
           ),
           const SizedBox(height: 10,),
           Center(
-            child: Column(
-              children: [
-                Text(
-                  _userModel.nama,
-                  style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: textHitam),
-                ),
-                Text(
-                  _userModel.email,
-                  style: TextStyle(color: textHitam, height: 0.7),
-                ),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 50.0),
+              child: Column(
+                children: [
+                  Text(
+                    _userModel.nama,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: textHitam),
+                  ),
+                  Text(
+                    _userModel.email,
+                    style: TextStyle(color: textHitam, height: 0.7),
+                  ),
+                ],
+              ),
             ),
           ),
           const SizedBox(
@@ -450,7 +456,11 @@ class _HalamanUtamaPageState extends State<HalamanUtamaPage> with WidgetsBinding
                         _itemMenu(Icons.error_outline, 'Terms and Conditions'),
                         _itemMenu(Icons.warning_amber, 'Privacy Policy'),
                         _itemMenu(Icons.email_outlined, 'Feedback'),
-                        _itemMenu(Icons.star_rate_outlined, 'Rate App'),
+                        Consumer<SettingProvider>(
+                          builder: (context, data, _) {
+                            return (data.setting.isDev > 0) ? SizedBox() : _itemMenu(Icons.star_rate_outlined, 'Rate App');
+                          }
+                        ),
                         const SizedBox(height: 20,),
                         _itemMenu(Icons.logout, 'Logout'),
                       ],

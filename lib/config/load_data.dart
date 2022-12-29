@@ -80,6 +80,7 @@ loadSetting() async {
   SettingModel model = SettingModel.fromMap(response.data);
   final prefs = await SharedPreferences.getInstance();
   prefs.setString('setting', jsonEncode(model.toMap()));
+  print('setting loaded');
 }
 
 loadSubscribe() async {

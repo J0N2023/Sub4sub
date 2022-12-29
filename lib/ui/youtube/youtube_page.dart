@@ -121,7 +121,7 @@ class _YoutubePageState extends State<YoutubePage> {
                                 color: Colors.red.withOpacity(0),
                               ))),
                           Container(
-                            color: Colors.black.withOpacity(0.8),
+                            color: Colors.black.withOpacity(0.9),
                             child: SafeArea(
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 20.0),

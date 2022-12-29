@@ -9,6 +9,7 @@ import 'package:sub4sub_2023/providers/current_campaign_provider.dart';
 import 'package:sub4sub_2023/providers/faq_provider.dart';
 import 'package:sub4sub_2023/providers/halaman_provider.dart';
 import 'package:sub4sub_2023/providers/my_campaign_provider.dart';
+import 'package:sub4sub_2023/providers/setting_provider.dart';
 import 'package:sub4sub_2023/providers/statistic_provider.dart';
 import 'package:sub4sub_2023/providers/subscribe_provider.dart';
 import 'package:sub4sub_2023/providers/user_provider.dart';
@@ -179,6 +180,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) =>  HalamanProvider()),
         ChangeNotifierProvider(create: (_) =>  ChatProvider()),
         ChangeNotifierProvider(create: (_) =>  SubscribeProvider()),
+        ChangeNotifierProvider(create: (_) =>  SettingProvider()),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,

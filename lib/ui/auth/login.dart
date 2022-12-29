@@ -1,14 +1,21 @@
 
 import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
 
 import 'package:animated_button/animated_button.dart';
+import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:sub4sub_2023/config/warna.dart';
 import 'package:sub4sub_2023/model/user_model.dart';
+import 'package:sub4sub_2023/providers/setting_provider.dart';
 
 import '../../config/url.dart';
 import '../../config/void.dart';
@@ -56,6 +63,27 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  _loginWithApple(UserCredential user) async {
+    Dio dio = Dio();
+    Map formData = {
+      'email': user.user!.email,
+      'nama': user.user!.displayName ?? user.user!.email,
+      'avatar': "https://sub4sub.annora.id/img/logo.png",
+      'signature': generateMd5('akun_with_google${user.user!.email}')
+    };
+    Response response = await dio.post("$apiUrl/akun_with_google",
+      data: formData,
+    );
+    if(response.data['status']) {
+      UserModel model = UserModel.fromMap(response.data['akun']);
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('user', jsonEncode(model.toMap()));
+      prefs.setBool('isLogin', true);
+      prefs.setBool('with_google', true);
+      context.goNamed('cek_login');
+    }
+  }
+
   _loginWithGoogle() async {
     Dio dio = Dio();
     Map formData = {
@@ -85,8 +113,45 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  //----------------------------------------------------------------------------
+
+  String generateNonce([int length = 32]) {
+    final charset = '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+    final random = Random.secure();
+    return List.generate(length, (_) => charset[random.nextInt(charset.length)]).join();
+  }
+
+  String sha256ofString(String input) {
+    final bytes = utf8.encode(input);
+    final digest = sha256.convert(bytes);
+    return digest.toString();
+  }
+
+  Future<UserCredential> signInWithApple() async {
+    final rawNonce = generateNonce();
+    final nonce = sha256ofString(rawNonce);
+
+    final appleCredential = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName
+      ],
+      nonce: nonce,
+    );
+
+    final oauthCredential = OAuthProvider("apple.com").credential(
+      idToken: appleCredential.identityToken,
+      rawNonce: rawNonce,
+    );
+
+    return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+  }
+
+  //----------------------------------------------------------------------------
+
   @override
   void initState() {
+    context.read<SettingProvider>().getData();
     super.initState();
     googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
       setState(() {
@@ -194,38 +259,80 @@ class _LoginPageState extends State<LoginPage> {
                         fontSize: 22
                       ),),
                     ),
-                    AnimatedButton(
-                      color: hijau,
-                      height: 60,
-                      width: MediaQuery.of(context).size.width - 60,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Center(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SizedBox(
-                                  width: 30,
-                                  height: 30,
-                                  child: Image.asset('assets/img/icon/google_putih.png')),
-                              const SizedBox(width: 10,),
-                              Text((user != null) ? 'Hi, ${user.displayName}' : 'Sign in with Google',
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
+                    Consumer<SettingProvider>(
+                      builder: (context,data,_) {
+                        return (data.setting.isDev > 0)
+                            ? SizedBox()
+                            : AnimatedButton(
+                                color: hijau,
+                                height: 60,
+                                width: MediaQuery.of(context).size.width - 60,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                  child: Center(
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        SizedBox(
+                                            width: 30,
+                                            height: 30,
+                                            child: Image.asset('assets/img/icon/google_putih.png')),
+                                        const SizedBox(width: 10,),
+                                        Text((user != null) ? 'Hi, ${user.displayName}' : 'Sign in with Google',
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  if(user == null){
+                                    _handleSignIn();
+                                  }
+                                },
+                              );
+                      }
+                    ),
+                    SizedBox(height: 10,),
+                    if(Platform.isIOS) AnimatedButton(
+                            color: Colors.black,
+                            height: 60,
+                            width: MediaQuery.of(context).size.width - 60,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Center(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    SizedBox(
+                                        width: 30,
+                                        height: 30,
+                                        child: Image.asset('assets/img/icon/apple.png')),
+                                    const SizedBox(width: 10,),
+                                    Text('Sign in with Apple',
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      onPressed: () {
-                        if(user == null){
-                          _handleSignIn();
-                        }
-                      },
-                    ),
+                            ),
+                            onPressed: () async {
+                              try{
+                                UserCredential user = await signInWithApple();
+                                _loginWithApple(user);
+                              }catch(e){
+                                print(e);
+                              }
+                            },
+                          )
                   ],
                 ),
               ),

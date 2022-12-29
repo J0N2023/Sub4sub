@@ -1,7 +1,7 @@
 name: sub4sub_2023
 description: Sub4sub Application 2023
 publish_to: 'none'
-version: 1.1.0
+version: 1.1.0+8
 
 environment:
   sdk: '>=2.19.0-444.0.dev <3.0.0'
@@ -41,6 +41,8 @@ dependencies:
   flutter_chat_bubble: ^2.0.0
   url_launcher: ^6.1.7
   purchases_flutter: ^4.5.4
+  firebase_auth: ^4.2.2
+  sign_in_with_apple: ^4.3.0
 
 dev_dependencies:
   flutter_test:
